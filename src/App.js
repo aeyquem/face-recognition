@@ -29,8 +29,27 @@ class App extends Component {
     super();
     this.state = {
       input: '',
-      imgUrl: ''
+      imgUrl: '',
+      box: {}
     }
+  }
+
+  calculateFaceLocation = (data) => {
+    const clafifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+    const image = document.getElementById('inputimage');
+    const width = Number(image.width);
+    const height = Number(image.height);
+    return {
+      leftCol: clafifaiFace.left_col * width,
+      topRow: clafifaiFace.top_row * height,
+      rightCol: width - (clafifaiFace.right_col * width),
+      bottomRow: height - (clafifaiFace.bottom_row * height)
+    }
+  }
+
+  displayFaceBox = (box) => {
+    console.log(box);
+    this.setState({ box: box });
   }
 
   onInputChange = (event) => {
@@ -38,16 +57,10 @@ class App extends Component {
   }
 
   onButtonClick = (event) => {
-    console.log("click");
     this.setState({ imgUrl: this.state.input })
-    app.models.predict("a403429f2ddf4b49b307e318f00e528b", this.state.input).then(
-      function (response) {
-        console.log(response.outputs[0].data.regions[0].region_info.bounding_box);
-      },
-      function (err) {
-        console.log(err);
-      }
-    );
+    app.models.predict("a403429f2ddf4b49b307e318f00e528b", this.state.input)
+      .then(response => this.displayFaceBox(this.calculateFaceLocation(response)))
+      .catch(err => console.log(err));
   }
 
   render() {
@@ -59,7 +72,7 @@ class App extends Component {
         <Rank></Rank>
         <Logo></Logo>
         <ImageLinkForm onInputChange={this.onInputChange} onButtonClick={this.onButtonClick}></ImageLinkForm>
-        <FaceRecognition imgUrl={this.state.imgUrl}></FaceRecognition>
+        <FaceRecognition box={this.state.box} imgUrl={this.state.imgUrl}></FaceRecognition>
       </div>
     );
   }
