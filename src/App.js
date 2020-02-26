@@ -1,5 +1,5 @@
 import ImageLinkForm from './components/image-link-form/ImageLinkForm';
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import './App.css';
 import Navigation from './components/navigation/Navigation';
 import Logo from './components/logo/Logo';
@@ -7,6 +7,7 @@ import Rank from './components/rank/Rank';
 import FaceRecognition from './components/face-recognition/FaceRecognition';
 import Particles from 'react-particles-js';
 import Clarifai from 'clarifai';
+import SignIn from './components/SignIn/SignIn'
 
 const app = new Clarifai.App({
   apiKey: '65715e9b297148bbb66e5893d3e589da'
@@ -30,7 +31,8 @@ class App extends Component {
     this.state = {
       input: '',
       imgUrl: '',
-      box: {}
+      box: {},
+      route: 'signIn'
     }
   }
 
@@ -63,16 +65,31 @@ class App extends Component {
       .catch(err => console.log(err));
   }
 
+  onRouteChange = (route) => {
+    this.setState({ route: route });
+  }
+
   render() {
+    let componentsToRender;
+    if (this.state.route === 'signIn') {
+      componentsToRender = <SignIn onRouteChange={this.onRouteChange}></SignIn>
+    }
+    else {
+      componentsToRender =
+        <Fragment>
+          <Logo></Logo>
+          <Rank></Rank>
+          <ImageLinkForm onInputChange={this.onInputChange} onButtonClick={this.onButtonClick}></ImageLinkForm>
+          <FaceRecognition box={this.state.box} imgUrl={this.state.imgUrl}></FaceRecognition>
+        </Fragment>
+    }
+
     return (
       <div className="App" >
         <Particles className="particles"
           params={particlesOptions} />
-        <Navigation></Navigation>
-        <Rank></Rank>
-        <Logo></Logo>
-        <ImageLinkForm onInputChange={this.onInputChange} onButtonClick={this.onButtonClick}></ImageLinkForm>
-        <FaceRecognition box={this.state.box} imgUrl={this.state.imgUrl}></FaceRecognition>
+        <Navigation onRouteChange={this.onRouteChange}></Navigation>
+        {componentsToRender}
       </div>
     );
   }
