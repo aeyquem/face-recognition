@@ -8,6 +8,8 @@ import FaceRecognition from './components/face-recognition/FaceRecognition';
 import Particles from 'react-particles-js';
 import Clarifai from 'clarifai';
 import SignIn from './components/SignIn/SignIn'
+import Register from './components/Register/Register'
+
 
 const app = new Clarifai.App({
   apiKey: '65715e9b297148bbb66e5893d3e589da'
@@ -71,17 +73,25 @@ class App extends Component {
 
   render() {
     let componentsToRender;
-    if (this.state.route === 'signIn') {
-      componentsToRender = <SignIn onRouteChange={this.onRouteChange}></SignIn>
-    }
-    else {
-      componentsToRender =
-        <Fragment>
-          <Logo></Logo>
-          <Rank></Rank>
-          <ImageLinkForm onInputChange={this.onInputChange} onButtonClick={this.onButtonClick}></ImageLinkForm>
-          <FaceRecognition box={this.state.box} imgUrl={this.state.imgUrl}></FaceRecognition>
-        </Fragment>
+
+    switch (this.state.route) {
+      case 'signIn':
+        componentsToRender = <SignIn onRouteChange={this.onRouteChange}></SignIn>
+        break;
+
+      case 'register':
+        componentsToRender = <Register onRouteChange={this.onRouteChange}></Register>
+        break;
+
+      default:
+        componentsToRender =
+          <Fragment>
+            <Logo></Logo>
+            <Rank></Rank>
+            <ImageLinkForm onInputChange={this.onInputChange} onButtonClick={this.onButtonClick}></ImageLinkForm>
+            <FaceRecognition box={this.state.box} imgUrl={this.state.imgUrl}></FaceRecognition>
+          </Fragment>
+        break;
     }
 
     return (
