@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 
 let database = {
     users: [
@@ -25,15 +26,16 @@ let database = {
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 app.get('/', (req, res) => {
-    res.send("this is working");
+    res.json(database.users);
 })
 
 app.post('/signin', (req, res) => {
-    if (req.body.user === database.users[0].user) {
+    if (req.body.email === database.users[0].email) {
         if (req.body.password === database.users[0].password) {
-            res.send("logged in")
+            res.json("logged in")
             return;
         }
     }
@@ -75,7 +77,7 @@ app.put('/image', (req, res) => {
     res.status(404).send("no such user");
 })
 
-app.listen(3000, () => {
-    console.log("running on port 3000");
+app.listen(3001, () => {
+    console.log("running on port 3001");
 })
 
