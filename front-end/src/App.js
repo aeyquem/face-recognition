@@ -35,8 +35,27 @@ class App extends Component {
       imgUrl: '',
       box: {},
       route: 'signIn',
-      isSignedIn: false
+      isSignedIn: false,
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+      }
     }
+  }
+
+  loadUser = (data) => {
+    this.setState({
+      user: {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        entries: 0,
+        joined: data.joined
+      }
+    })
   }
 
   calculateFaceLocation = (data) => {
@@ -92,7 +111,7 @@ class App extends Component {
         break;
 
       case 'register':
-        componentsToRender = <Register onRouteChange={this.onRouteChange}></Register>
+        componentsToRender = <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser}></Register>
         break;
 
       case 'home':
@@ -111,7 +130,7 @@ class App extends Component {
       <div className="App" >
         <Particles className="particles"
           params={particlesOptions} />
-        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}></Navigation>
+        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} loadUser={this.loadUser}></Navigation>
         {componentsToRender}
       </div>
     );

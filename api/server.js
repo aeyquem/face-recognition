@@ -8,7 +8,7 @@ let database = {
             "user": "jhon",
             "password": "macoy123",
             "entries": 0,
-            "registrationDate": new Date(),
+            "joined": new Date(),
             "email": "jhon@gmail.com"
         },
         {
@@ -16,7 +16,7 @@ let database = {
             "user": "sally",
             "password": "macoy123",
             "entries": 0,
-            "registrationDate": new Date(),
+            "joined": new Date(),
             "email": "sally@gmail.com"
         },
     ]
@@ -46,9 +46,8 @@ app.post('/register', (req, res) => {
     const { user, email, password } = req.body;
     database.users.push({
         "user": user,
-        "password": password,
         "entries": 0,
-        "registrationDate": new Date(),
+        "joined": new Date(),
         "email": email
     });
     res.send(database.users[database.users.length - 1]);
