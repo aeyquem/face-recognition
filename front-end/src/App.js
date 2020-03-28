@@ -81,9 +81,26 @@ class App extends Component {
   }
 
   onButtonClick = (event) => {
+    console.log("user id " + this.state.user.id);
+
     this.setState({ imgUrl: this.state.input })
     app.models.predict("a403429f2ddf4b49b307e318f00e528b", this.state.input)
-      .then(response => this.displayFaceBox(this.calculateFaceLocation(response)))
+      .then(response => {
+        if (response) {
+          fetch('http://localhost:3001/image', {
+            method: 'put',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: this.state.user.id
+            })
+          })
+            .then(response => response.json())
+            .then(count => {
+              this.setState(Object.assign(this.state.user, { entries: count }))
+            })
+        }
+        this.displayFaceBox(this.calculateFaceLocation(response))
+      })
       .catch(err => console.log(err));
   }
 
@@ -100,14 +117,14 @@ class App extends Component {
 
   render() {
 
-    const { isSignedIn, box, imageUrl, route } = this.state;
+    const { isSignedIn, box, imgUrl, route } = this.state;
 
     let componentsToRender;
 
     switch (route) {
       case 'signIn':
       case 'signOut':
-        componentsToRender = <SignIn onRouteChange={this.onRouteChange}></SignIn>
+        componentsToRender = <SignIn onRouteChange={this.onRouteChange} loadUser={this.loadUser}></SignIn>
         break;
 
       case 'register':
@@ -119,9 +136,9 @@ class App extends Component {
         componentsToRender =
           <Fragment>
             <Logo></Logo>
-            <Rank></Rank>
+            <Rank name={this.state.user.name} entries={this.state.user.entries} />
             <ImageLinkForm onInputChange={this.onInputChange} onButtonClick={this.onButtonClick}></ImageLinkForm>
-            <FaceRecognition box={box} imgUrl={imageUrl}></FaceRecognition>
+            <FaceRecognition box={box} imgUrl={imgUrl}></FaceRecognition>
           </Fragment>
         break;
     }

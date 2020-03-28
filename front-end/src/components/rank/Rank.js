@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
-const Rank = () => {
+const Rank = ({ name, entries }) => {
   return (
-    <div>nada</div>
+    <Fragment>
+      <div className="white f3">
+        {`${name} , your current rank is...`}
+      </div>
+      <div className='white f1 '>
+        {entries}
+      </div>
+    </Fragment>
   );
 }
 

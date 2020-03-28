@@ -1,11 +1,22 @@
 import express from 'express';
 import cors from 'cors';
+import knex from 'knex';
+
+const db = knex({
+    client: 'pg',
+    connection: {
+        host: '127.0.0.1',
+        user: 'postgres',
+        password: 'localdb',
+        database: 'smartbrain'
+    }
+});
 
 let database = {
     users: [
         {
             "id": "123",
-            "user": "jhon",
+            "name": "jhon",
             "password": "macoy123",
             "entries": 0,
             "joined": new Date(),
@@ -13,7 +24,7 @@ let database = {
         },
         {
             "id": "124",
-            "user": "sally",
+            "name": "sally",
             "password": "macoy123",
             "entries": 0,
             "joined": new Date(),
@@ -35,22 +46,23 @@ app.get('/', (req, res) => {
 app.post('/signin', (req, res) => {
     if (req.body.email === database.users[0].email) {
         if (req.body.password === database.users[0].password) {
-            res.json("logged in")
-            return;
+            res.json(database.users[0]);
         }
     }
     res.status(400).send("error logging in");
 })
 
 app.post('/register', (req, res) => {
-    const { user, email, password } = req.body;
-    database.users.push({
-        "user": user,
-        "entries": 0,
-        "joined": new Date(),
-        "email": email
-    });
-    res.send(database.users[database.users.length - 1]);
+    const { name, email, password } = req.body;
+    db('users')
+        .returning('*')
+        .insert({
+            "name": name,
+            "joined": new Date(),
+            "email": email
+        }).then(user => {
+            res.json(user[0]);
+        }).catch(err => res.status(400).json('unable to register'));
 })
 
 app.get('/profile/:id', (req, res) => {
@@ -66,14 +78,17 @@ app.get('/profile/:id', (req, res) => {
 
 app.put('/image', (req, res) => {
     const { id } = req.body;
+    let found = false;
     database.users.forEach(user => {
         if (user.id === id) {
+            found = true;
             user.entries++;
-            res.json(user.entries);
-            return;
+            return res.json(user.entries);
         }
     })
-    res.status(404).send("no such user");
+    if (!found) {
+        res.status(400).send("no such user");
+    }
 })
 
 app.listen(3001, () => {
