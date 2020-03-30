@@ -67,29 +67,33 @@ app.post('/register', (req, res) => {
 
 app.get('/profile/:id', (req, res) => {
     const { id } = req.params;
-    database.users.forEach(user => {
-        if (user.id === id) {
-            res.json(user);
-            return;
-        }
-    })
-    res.status(404).send("no such user");
+    db.select('*')
+        .from('users')
+        .where({ id })
+        .then(user => {
+            console.log(user);
+            if (user.length) {
+                res.json(user[0]);
+            }
+            else {
+                res.status(400).send('error getting user')
+            }
+        })
+        .catch(err => res.status(400).send('error getting user'));
 })
 
 app.put('/image', (req, res) => {
     const { id } = req.body;
-    let found = false;
-    database.users.forEach(user => {
-        if (user.id === id) {
-            found = true;
-            user.entries++;
-            return res.json(user.entries);
-        }
-    })
-    if (!found) {
-        res.status(400).send("no such user");
-    }
+    db.from('')
+        .where({ id })
+        .increment('entries', 1)
+        .returning('entries')
+        .then(entries => {
+            res.json(entries[0]);
+        })
+        .catch(err => res.json('unable to get entries').status(400));
 })
+
 
 app.listen(3001, () => {
     console.log("running on port 3001");
