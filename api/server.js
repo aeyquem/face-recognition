@@ -7,8 +7,8 @@ const db = knex({
     client: 'pg',
     connection: {
         host: '127.0.0.1',
-        user: 'postgres',
-        password: 'localdb',
+        user: 'sbrain',
+        password: 'sbrain',
         database: 'smartbrain'
     }
 });
@@ -46,7 +46,7 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
     const { name, email, password } = req.body;
-    const hash = bcrypt.hashSync(password, 0);
+    const hash = bcrypt.hashSync(password);
     db.transaction(trx => {
         trx.insert({
             hash: hash,
