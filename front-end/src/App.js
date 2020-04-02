@@ -6,14 +6,8 @@ import Logo from './components/logo/Logo';
 import Rank from './components/rank/Rank';
 import FaceRecognition from './components/face-recognition/FaceRecognition';
 import Particles from 'react-particles-js';
-import Clarifai from 'clarifai';
 import SignIn from './components/SignIn/SignIn'
 import Register from './components/Register/Register'
-
-
-const app = new Clarifai.App({
-  apiKey: '65715e9b297148bbb66e5893d3e589da'
-});
 
 const particlesOptions = {
   particles: {
@@ -98,8 +92,15 @@ class App extends Component {
   onButtonClick = (event) => {
     console.log("user id " + this.state.user.id);
 
-    this.setState({ imgUrl: this.state.input })
-    app.models.predict("a403429f2ddf4b49b307e318f00e528b", this.state.input)
+    this.setState({ imgUrl: this.state.input });
+    fetch('http://localhost:3001/imageurl', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        input: this.state.input
+      })
+    })
+      .then(response => response.json())
       .then(response => {
         if (response) {
           fetch('http://localhost:3001/image', {
