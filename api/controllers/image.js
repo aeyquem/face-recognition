@@ -1,4 +1,4 @@
-import Clarifai from 'clarifai';
+const Clarifai = require('clarifai');
 
 const app = new Clarifai.App({
     apiKey: '65715e9b297148bbb66e5893d3e589da'
@@ -26,4 +26,7 @@ const handleApiCall = (req, res) => {
         });
 }
 
-export default { submitImage, handleApiCall };
+module.exports = {
+    submitImage: submitImage,
+    handleApiCall: handleApiCall
+};

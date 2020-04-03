@@ -25,4 +25,6 @@ const signIn = (req, res, db, bcrypt) => {
         .catch(err => res.status(400).send("error logging in"));
 }
 
-export default signIn;
+module.exports = {
+    sign: signIn
+};

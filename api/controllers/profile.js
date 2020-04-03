@@ -15,4 +15,6 @@ const getProfile = (req, res, db) => {
         .catch(err => res.status(400).send('error getting user'));
 }
 
-export default getProfile;
+module.exports = {
+    getProfile: getProfile
+};

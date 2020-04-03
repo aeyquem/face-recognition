@@ -1,11 +1,11 @@
 const express = require('express');
-const cors = ('cors');
-const knex = ('knex');
-const bcrypt = ('bcryptjs');
-const register = ('./controllers/register.js');
-const signIn = ('./controllers/signin.js');
-const getProfile = ('./controllers/profile.js');
-const image = ('./controllers/image.js');
+const cors = require('cors');
+const knex = require('knex');
+const bcrypt = require('bcryptjs');
+const register = require('./controllers/register.js');
+const signIn = require('./controllers/signin.js');
+const getProfile = require('./controllers/profile.js');
+const image = require('./controllers/image.js');
 
 const db = knex({
     client: 'pg',
