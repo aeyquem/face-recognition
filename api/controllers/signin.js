@@ -26,5 +26,5 @@ const signIn = (req, res, db, bcrypt) => {
 }
 
 module.exports = {
-    sign: signIn
+    signIn: signIn
 };
