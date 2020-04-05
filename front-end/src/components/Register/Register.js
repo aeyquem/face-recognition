@@ -22,7 +22,7 @@ class Register extends Component {
 
     onSubmit = () => {
         console.log(this.state);
-        fetch('https://smartbrain-api-ae/register', {
+        fetch('https://smartbrain-api-ae.herokuapp.com/register', {
             method: 'post',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
