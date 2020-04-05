@@ -93,7 +93,7 @@ class App extends Component {
     console.log("user id " + this.state.user.id);
 
     this.setState({ imgUrl: this.state.input });
-    fetch('http://limitless-waters-82952.herokuapp.com/imageurl', {
+    fetch('https://smartbrain-api-ae/imageurl', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -103,7 +103,7 @@ class App extends Component {
       .then(response => response.json())
       .then(response => {
         if (response) {
-          fetch('http://limitless-waters-82952.herokuapp.com/image', {
+          fetch('https://limitless-waters-82952.herokuapp.com/image', {
             method: 'put',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
