@@ -42,7 +42,7 @@ class App extends Component {
     this.state = {
       input: '',
       imgUrl: '',
-      box: {},
+      box: [],
       route: 'signIn',
       isSignedIn: false,
       user: {
@@ -68,20 +68,23 @@ class App extends Component {
   }
 
   calculateFaceLocation = (data) => {
-    const clafifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+    const clafifaiFace = data.outputs[0].data.regions;
     const image = document.getElementById('inputimage');
     const width = Number(image.width);
     const height = Number(image.height);
-    return {
-      leftCol: clafifaiFace.left_col * width,
-      topRow: clafifaiFace.top_row * height,
-      rightCol: width - (clafifaiFace.right_col * width),
-      bottomRow: height - (clafifaiFace.bottom_row * height)
-    }
+
+    return clafifaiFace.map(region => {
+      const boundingBox = region.region_info.bounding_box;
+      return {
+        leftCol: boundingBox.left_col * width,
+        topRow: boundingBox.top_row * height,
+        rightCol: width - (boundingBox.right_col * width),
+        bottomRow: height - (boundingBox.bottom_row * height)
+      }
+    })
   }
 
   displayFaceBox = (box) => {
-    console.log(box);
     this.setState({ box: box });
   }
 
@@ -154,7 +157,7 @@ class App extends Component {
             <Logo></Logo>
             <Rank name={this.state.user.name} entries={this.state.user.entries} />
             <ImageLinkForm onInputChange={this.onInputChange} onButtonClick={this.onButtonClick}></ImageLinkForm>
-            <FaceRecognition box={box} imgUrl={imgUrl}></FaceRecognition>
+            <FaceRecognition boxes={box} imgUrl={imgUrl}></FaceRecognition>
           </Fragment>
         break;
     }
