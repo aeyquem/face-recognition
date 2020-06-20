@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+    # backend API
+    smart-brain-api:
+        container_name: backend
+        build: ./
+        command: npm start
+        working_dir: /usr/src/smart-brain-api
+        ports: 
+            - "3001:3001"
+        volumes: 
+            - ./:/usr/src/smart-brain-api
+        environment: 
+            DATABASE_URL: "postgresql://dockeruser:dockerdb@postgres:5432/smartbrain-docker"
+            NODE_ENV: 'docker'
+            PORT: '3001'
+
+
+    # postgres
+    postgres:
+        container_name: postgres
+        build: ./postgres
+        image: postgres
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_USER: dockeruser
+            POSTGRES_PASSWORD: dockerdb
+            POSTGRES_DB: smartbrain-docker
+            POSTGRES_HOST: postgres
