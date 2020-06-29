@@ -1,9 +1,14 @@
 import React, { Fragment } from 'react';
+import ProfileIcon from '../profile-icon/ProfileIcon';
 
 const Navigation = ({ onRouteChange, isSignedIn }) => {
     let userSignInText = '';
     if (isSignedIn) {
-        userSignInText = <p onClick={() => onRouteChange('signOut')} className="f3 link dim black underline pa3 pointer">Sign out</p>
+        userSignInText =
+            <Fragment>
+                <p onClick={() => onRouteChange('signOut')} className="f3 link dim black underline pa3 pointer">Sign out</p>
+                <ProfileIcon />
+            </Fragment>
     }
     else {
         userSignInText =
