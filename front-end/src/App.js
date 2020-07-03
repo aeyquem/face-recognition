@@ -8,6 +8,8 @@ import FaceRecognition from './components/face-recognition/FaceRecognition';
 import Particles from 'react-particles-js';
 import SignIn from './components/SignIn/SignIn'
 import Register from './components/Register/Register'
+import Modal from './components/Modal/Modal'
+import Profile from './components/profile/Profile';
 
 const particlesOptions = {
   particles: {
@@ -24,9 +26,10 @@ const particlesOptions = {
 const initialState = {
   input: '',
   imgUrl: '',
-  box: {},
+  box: [],
   route: 'signIn',
   isSignedIn: false,
+  isProfileOpen: false,
   user: {
     id: '',
     name: '',
@@ -45,6 +48,7 @@ class App extends Component {
       box: [],
       route: 'signIn',
       isSignedIn: false,
+      isProfileOpen: false,
       user: {
         id: '',
         name: '',
@@ -61,7 +65,7 @@ class App extends Component {
         id: data.id,
         name: data.name,
         email: data.email,
-        entries: 0,
+        entries: data.entries,
         joined: data.joined
       }
     })
@@ -134,9 +138,16 @@ class App extends Component {
     this.setState({ route: route });
   }
 
+  toggleModal = () => {
+    this.setState(prevState => ({
+      ...prevState,
+      isProfileOpen: !prevState.isProfileOpen
+    }))
+  }
+
   render() {
 
-    const { isSignedIn, box, imgUrl, route } = this.state;
+    const { isSignedIn, box, imgUrl, route, isProfileOpen, user } = this.state;
 
     let componentsToRender;
 
@@ -166,7 +177,13 @@ class App extends Component {
       <div className="App" >
         <Particles className="particles"
           params={particlesOptions} />
-        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} loadUser={this.loadUser}></Navigation>
+        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} loadUser={this.loadUser} toggleModal={this.toggleModal}></Navigation>
+        {
+          isProfileOpen &&
+          <Modal>
+            <Profile user={user} toggleModal={this.toggleModal} loadUser={this.loadUser} />
+          </Modal>
+        }
         {componentsToRender}
       </div>
     );

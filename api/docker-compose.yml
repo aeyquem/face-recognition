@@ -16,7 +16,6 @@ services:
             NODE_ENV: 'docker'
             PORT: '3001'
 
-
     # postgres
     postgres:
         container_name: postgres

@@ -34,6 +34,7 @@ app.post('/signin', (req, res) => signIn.signIn(req, res, db, bcrypt));
 app.post('/register', (req, res) => register.handleRegister(req, res, db, bcrypt));
 
 app.get('/profile/:id', (req, res) => profile.getProfile(req, res, db));
+app.post('/profile/:id', (req, res) => profile.editProfile(req, res, db));
 
 app.put('/image', (req, res) => image.submitImage(req, res, db));
 
