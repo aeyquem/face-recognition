@@ -59,6 +59,26 @@ class App extends Component {
     }
   }
 
+  componentDidMount() {
+    const token = window.sessionStorage.getItem('token')
+    if (token) {
+      fetch(`${process.env.REACT_APP_API_URL}/signin`, {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.id) {
+            console.log('success')
+          }
+        })
+        .catch(console.log)
+    }
+  }
+
   loadUser = (data) => {
     this.setState({
       user: {

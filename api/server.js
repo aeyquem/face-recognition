@@ -22,6 +22,7 @@ app.use(express.json());
 app.use(cors());
 app.use((req, res, next) => {
     console.log(`requested: ${req.method} ${req.url}`);
+    console.log(req.body);
     next();
 })
 
@@ -29,9 +30,9 @@ app.get('/', (req, res) => {
     res.json("Server live");
 })
 
-app.post('/signin', (req, res) => signIn.signIn(req, res, db, bcrypt));
+app.post('/signin', signIn.signInAuthentication(db, bcrypt));
 
-app.post('/register', register.signInAuthentication(db, bcrypt));
+app.post('/register', (req, res) => register.handleRegister(req, res, db, bcrypt))
 
 app.get('/profile/:id', (req, res) => profile.getProfile(req, res, db));
 app.post('/profile/:id', (req, res) => profile.editProfile(req, res, db));

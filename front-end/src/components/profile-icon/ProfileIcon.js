@@ -26,7 +26,7 @@ export default class ProfileIcon extends Component {
                     >
                         <img
                             src="http://tachyons.io/img/avatar_1.jpg"
-                            class="br-100 ba h3 w3 dib" alt="avatar" />
+                            className="br-100 ba h3 w3 dib" alt="avatar" />
                     </DropdownToggle>
                     <DropdownMenu
                         right
