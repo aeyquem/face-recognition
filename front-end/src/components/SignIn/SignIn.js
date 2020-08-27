@@ -17,6 +17,10 @@ class SignIn extends Component {
         this.setState({ signInPassword: event.target.value });
     }
 
+    saveAuthTokenInStorage = (token) => {
+        window.sessionStorage.setItem('token', token)
+    }
+
     onSubmit = () => {
         console.log(this.state);
         fetch(`${process.env.REACT_APP_API_URL}/signin`, {
@@ -28,12 +32,13 @@ class SignIn extends Component {
             })
         })
             .then(res => res.json())
-            .then(user => {
-                if (user.id) {
-                    this.props.loadUser(user);
-                    this.props.onRouteChange('home');
+            .then(data => {
+                if (data.userId && data.success === 'true') {
+                    this.saveAuthTokenInStorage(data.token)
+                    this.props.getUser(data.userId, data.token)
                 }
-            });
+            })
+            .catch('err: ' + console.log);
     }
 
     render() {
