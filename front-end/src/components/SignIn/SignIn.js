@@ -31,13 +31,11 @@ class SignIn extends Component {
                 password: this.state.signInPassword
             })
         })
-            .then('res: ' + console.log)
             .then(res => res.json())
             .then(data => {
                 if (data.userId && data.success === 'true') {
                     this.saveAuthTokenInStorage(data.token)
-                    this.props.loadUser(data);
-                    this.props.onRouteChange('home');
+                    this.props.getUser(data.userId, data.token)
                 }
             })
             .catch('err: ' + console.log);

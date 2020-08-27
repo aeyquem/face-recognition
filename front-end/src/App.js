@@ -72,11 +72,29 @@ class App extends Component {
         .then(res => res.json())
         .then(data => {
           if (data.id) {
-            console.log('success')
+            this.getUser(data.id, token)
           }
         })
         .catch(console.log)
     }
+  }
+
+  getUser = (id, token) => {
+    fetch(`${process.env.REACT_APP_API_URL}/profile/${id}`, {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      }
+    })
+      .then(res => res.json())
+      .then(user => {
+        if (user && user.email) {
+          this.loadUser(user);
+          this.onRouteChange('home');
+        }
+      })
+      .catch(console.log);
   }
 
   loadUser = (data) => {
@@ -122,7 +140,10 @@ class App extends Component {
     this.setState({ imgUrl: this.state.input });
     fetch(`${process.env.REACT_APP_API_URL}/imageurl`, {
       method: 'post',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': window.sessionStorage.getItem('token')
+      },
       body: JSON.stringify({
         input: this.state.input
       })
@@ -132,7 +153,10 @@ class App extends Component {
         if (response) {
           fetch(`${process.env.REACT_APP_API_URL}/image`, {
             method: 'put',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': window.sessionStorage.getItem('token')
+            },
             body: JSON.stringify({
               id: this.state.user.id
             })
@@ -174,7 +198,7 @@ class App extends Component {
     switch (route) {
       case 'signIn':
       case 'signOut':
-        componentsToRender = <SignIn onRouteChange={this.onRouteChange} loadUser={this.loadUser}></SignIn>
+        componentsToRender = <SignIn onRouteChange={this.onRouteChange} loadUser={this.loadUser} getUser={this.getUser}></SignIn>
         break;
 
       case 'register':

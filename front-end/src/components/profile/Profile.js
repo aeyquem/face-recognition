@@ -23,7 +23,10 @@ class Profile extends Component {
         fetch(`${process.env.REACT_APP_API_URL}/profile/${this.props.user.id}`, {
             method: 'POST',
             body: JSON.stringify({ formInput: data }),
-            headers: { 'Content-Type': 'application/json' }
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': window.sessionStorage.getItem('token')
+            }
         })
             .then(res => {
                 toggleModal();
